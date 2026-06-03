@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentes Digitais</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --bg2: #0e0e1a;
+  --card: #13131f;
+  --card2: #1a1a28;
+  --border: #2a2a3e;
+  --border2: #3a3a52;
+  --white: #f0eef8;
+  --muted: #7a7a9a;
+  --rose: #d4607a;
+  --rose2: #f0a0b8;
+  --gold: #d4a843;
+  --blue: #6080d4;
+  --green: #5ab88a;
+  --purple: #9060c8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* PARTICLES */
+#particles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.p-star { position:absolute; border-radius:50%; background:white;
+  animation: ptw var(--d,3s) infinite alternate; }
+@keyframes ptw { from{opacity:var(--oa,.05)} to{opacity:var(--ob,.4)} }
+
+/* HEADER */
+header {
+  position: relative; z-index:1;
+  padding: 60px 24px 48px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #0d0d1e, var(--bg));
+}
+header::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 0%, #d4607a14, transparent 60%);
+}
+.logo-tag {
+  font-size:10px; letter-spacing:5px; color:var(--rose2);
+  text-transform:uppercase; margin-bottom:14px;
+}
+.logo-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size: clamp(36px,10vw,64px);
+  font-weight:300; line-height:1.1;
+}
+.logo-title em { color:var(--rose); font-style:italic; }
+.logo-sub { font-size:13px; color:var(--muted); margin-top:10px; }
+.logo-line {
+  width:60px; height:1px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  margin:20px auto 0;
+}
+
+/* SEARCH / FILTER */
+.controls {
+  position: relative; z-index:1;
+  padding: 24px 20px;
+  display: flex; flex-direction:column; gap:16px;
+  max-width: 700px; margin: 0 auto;
+}
+.search-wrap { position:relative; }
+.search-wrap input {
+  width:100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px 14px 44px;
+  color: var(--white);
+  font-family:'Outfit',sans-serif; font-size:14px;
+  outline:none; transition: border-color .2s;
+}
+.search-wrap input:focus { border-color:var(--rose); }
+.search-wrap input::placeholder { color:var(--muted); }
+.search-icon {
+  position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  font-size:16px; pointer-events:none;
+}
+.filters { display:flex; gap:8px; flex-wrap:wrap; }
+.filter-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 16px;
+  color: var(--muted);
+  font-family:'Outfit',sans-serif; font-size:12px;
+  cursor:pointer; transition: all .2s;
+  letter-spacing:.5px;
+}
+.filter-btn:hover { border-color:var(--border2); color:var(--white); }
+.filter-btn.active {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: white;
+}
+
+/* GRID */
+.grid-wrap {
+  position:relative; z-index:1;
+  max-width:700px; margin:0 auto;
+  padding: 8px 20px 80px;
+}
+.grid-label {
+  font-size:11px; letter-spacing:3px; color:var(--muted);
+  text-transform:uppercase; margin-bottom:16px;
+}
+.cards-grid {
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:12px;
+}
+
+/* CARD */
+.pcard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow:hidden;
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+  opacity:0; transform:translateY(16px);
+  transition: opacity .5s, transform .5s, border-color .25s, box-shadow .25s;
+}
+.pcard.visible { opacity:1; transform:translateY(0); }
+.pcard:hover {
+  border-color: var(--border2);
+  box-shadow: 0 8px 32px #00000033;
+  transform: translateY(-2px);
+}
+.pcard-inner {
+  display:flex; align-items:center; gap:0;
+}
+.pcard-accent {
+  width:4px; align-self:stretch;
+  border-radius:0; flex-shrink:0;
+  background: var(--accent, var(--rose));
+}
+.pcard-body {
+  flex:1; padding:18px 16px 18px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.pcard-icon {
+  font-size:28px; flex-shrink:0;
+  width:48px; height:48px;
+  background: var(--card2);
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+}
+.pcard-info { flex:1; min-width:0; }
+.pcard-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px; font-weight:400;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pcard-cat {
+  font-size:11px; color:var(--muted);
+  letter-spacing:1.5px; text-transform:uppercase;
+  margin-top:3px;
+}
+.pcard-actions {
+  display:flex; gap:8px; flex-shrink:0;
+  padding-right:16px;
+}
+.btn-action {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 14px;
+  border-radius:8px;
+  font-family:'Outfit',sans-serif;
+  font-size:12px; font-weight:500;
+  cursor:pointer; border:none;
+  transition: all .2s; white-space:nowrap;
+}
+.btn-prompt {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.btn-prompt:hover { border-color:var(--gold); color:var(--gold); }
+.btn-ficha {
+  background: var(--rose);
+  color: white;
+  box-shadow: 0 2px 12px #d4607a33;
+}
+.btn-ficha:hover { opacity:.88; transform:scale(1.03); }
+
+/* MODAL */
+.modal-overlay {
+  position:fixed; inset:0; z-index:200;
+  background:#000000cc;
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .3s;
+  padding:0;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius:24px 24px 0 0;
+  width:100%; max-width:680px;
+  max-height:90vh;
+  transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-handle {
+  width:40px; height:4px; border-radius:2px;
+  background:var(--border2); margin:12px auto 0;
+  flex-shrink:0;
+}
+.modal-header {
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.modal-icon { font-size:26px; }
+.modal-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; flex:1;
+}
+.modal-close {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:6px 12px;
+  color:var(--muted); cursor:pointer; font-size:18px;
+  transition: color .2s;
+}
+.modal-close:hover { color:var(--white); }
+.modal-body { flex:1; overflow-y:auto; padding:20px 24px 32px; }
+
+/* PROMPT DISPLAY */
+.prompt-box {
+  background: var(--bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  font-family:'Outfit',sans-serif;
+  font-size:13px; color:#c8c8e8;
+  white-space:pre-wrap; line-height:1.8;
+  max-height:52vh; overflow-y:auto;
+  margin-bottom:16px;
+}
+.btn-copy-prompt {
+  width:100%;
+  background:var(--rose);
+  color:white; border:none;
+  border-radius:12px; padding:14px;
+  font-family:'Outfit',sans-serif;
+  font-size:14px; font-weight:500;
+  cursor:pointer; transition:opacity .2s;
+}
+.btn-copy-prompt:hover { opacity:.88; }
+
+/* FICHA INLINE */
+.ficha-wrap { font-size:13px; }
+.ficha-section { margin-bottom:24px; }
+.ficha-sec-title {
+  font-size:11px; letter-spacing:2px; color:var(--rose2);
+  text-transform:uppercase; margin-bottom:12px;
+  padding-bottom:8px; border-bottom:1px solid var(--border);
+}
+.ficha-field { margin-bottom:14px; }
+.ficha-label {
+  font-size:11px; letter-spacing:1px; color:var(--muted);
+  text-transform:uppercase; margin-bottom:6px;
+  display:block;
+}
+.ficha-label .req { color:var(--rose); }
+.ficha-hint { font-size:11px; color:var(--muted); font-style:italic; margin-bottom:6px; }
+.ficha-input, .ficha-textarea, .ficha-select {
+  width:100%; background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px; padding:10px 14px;
+  color:var(--white); font-family:'Outfit',sans-serif;
+  font-size:13px; outline:none;
+  transition:border-color .2s;
+}
+.ficha-input:focus, .ficha-textarea:focus { border-color:var(--rose); }
+.ficha-textarea { resize:vertical; min-height:72px; line-height:1.6; }
+.ficha-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.opt-pills { display:flex; flex-wrap:wrap; gap:6px; }
+.opt-pill {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:6px 12px;
+  font-size:12px; cursor:pointer;
+  transition:all .2s; user-select:none;
+}
+.opt-pill input { display:none; }
+.opt-pill:has(input:checked) { background:#d4607a22; border-color:var(--rose); color:var(--rose2); }
+.ficha-extras { display:flex; flex-direction:column; gap:8px; }
+.ficha-extra {
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:10px; padding:10px 14px;
+  cursor:pointer; transition:all .2s;
+}
+.ficha-extra:has(input:checked) { border-color:var(--rose); background:#d4607a11; }
+.ficha-extra input { display:none; }
+.fe-box {
+  width:18px; height:18px; border-radius:5px;
+  border:2px solid var(--border); background:var(--card2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; flex-shrink:0; transition:all .2s;
+}
+.ficha-extra:has(input:checked) .fe-box { background:var(--rose); border-color:var(--rose); color:white; }
+.fe-icon { font-size:18px; flex-shrink:0; }
+.fe-info { flex:1; }
+.fe-name { font-size:13px; font-weight:500; }
+.fe-desc { font-size:11px; color:var(--muted); margin-top:2px; }
+.ficha-tip {
+  background:#d4607a14; border:1px solid #d4607a44;
+  border-radius:8px; padding:10px 14px;
+  font-size:12px; color:var(--rose2); line-height:1.6;
+  margin-bottom:12px;
+}
+.btn-gerar {
+  width:100%; background:var(--rose);
+  color:white; border:none; border-radius:12px;
+  padding:14px; font-family:'Outfit',sans-serif;
+  font-size:14px; font-weight:500; cursor:pointer;
+  margin-top:20px; transition:opacity .2s;
+}
+.btn-gerar:hover { opacity:.88; }
+.resumo-box {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:10px; padding:16px;
+  font-size:12px; color:#c8c8e8; white-space:pre-wrap;
+  line-height:1.8; margin-top:12px;
+  max-height:300px; overflow-y:auto;
+  display:none;
+}
+.resumo-box.visible { display:block; }
+.btn-copy-resumo {
+  width:100%; background:var(--card2);
+  border:1px solid var(--border); border-radius:10px;
+  padding:12px; color:var(--white);
+  font-family:'Outfit',sans-serif; font-size:13px;
+  cursor:pointer; margin-top:8px; transition:all .2s;
+  display:none;
+}
+.btn-copy-resumo.visible { display:block; }
+.btn-copy-resumo:hover { border-color:var(--rose); color:var(--rose2); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background:var(--card2); border:1px solid var(--border);
+  color:var(--white); padding:12px 24px;
+  border-radius:40px; font-size:13px; z-index:999;
+  opacity:0; transition:all .35s; white-space:nowrap;
+}
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+/* FOOTER */
+footer {
+  position:relative; z-index:1;
+  text-align:center; padding:32px 20px;
+  font-size:12px; color:var(--border2);
+  border-top:1px solid var(--border);
+}
+
+@media(max-width:480px){
+  .pcard-actions { flex-direction:column; gap:6px; }
+  .btn-action { justify-content:center; }
+  .ficha-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<header>
+  <div class="logo-tag">✦ Sistema Interno ✦</div>
+  <div class="logo-title">Presentes <em>Digitais</em></div>
+  <div class="logo-sub">Catálogo de sites presente — prompts e fichas de pedido</div>
+  <div class="logo-line"></div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar presente…" id="search-input" oninput="filterCards()">
+  </div>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('casal',this)">💕 Casal</button>
+    <button class="filter-btn" onclick="setFilter('aniversario',this)">🎂 Aniversário</button>
+    <button class="filter-btn" onclick="setFilter('familia',this)">👨‍👩‍👧 Família</button>
+    <button class="filter-btn" onclick="setFilter('bodas',this)">💍 Bodas</button>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid-label" id="grid-label">14 presentes disponíveis</div>
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- MODAL PROMPT -->
+<div class="modal-overlay" id="modal-prompt" onclick="closeModal('prompt')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-icon" id="mp-icon"></div>
+      <div class="modal-title" id="mp-title"></div>
+      <button class="modal-close" onclick="closeModal('prompt')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="prompt-box" id="mp-content"></div>
+      <button class="btn-copy-prompt" onclick="copyPrompt()">📋 Copiar Prompt</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FICHA -->
+<div class="modal-overlay" id="modal-ficha" onclick="closeModal('ficha')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-icon" id="mf-icon"></div>
+      <div class="modal-title" id="mf-title"></div>
+      <button class="modal-close" onclick="closeModal('ficha')">✕</button>
+    </div>
+    <div class="modal-body ficha-wrap" id="mf-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>Presentes Digitais · Sistema Interno · 2026 ✦</footer>
+
+<script>
+// ===== PARTICLES =====
+const pc = document.getElementById('particles');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div'); s.className='p-star';
+  const sz=Math.random()*1.8+.4;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--oa:${(Math.random()*.08+.02).toFixed(2)};--ob:${(Math.random()*.25+.1).toFixed(2)};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+  pc.appendChild(s);
+}
+
+// ===== DATA =====
+const PRESENTES = [
+  {
+    id:'namorados', cat:'casal', icon:'💕', accent:'#d4607a',
+    nome:'Presente de Namorados',
+    prompt:`Crie um site presente HTML completo e visualmente elegante para um presente de Dia dos Namorados.
+
+ESTILO VISUAL:
+- Tema dark romântico (fundo #080810, cards #13131f)
+- Fontes: Playfair Display (títulos), Dancing Script (detalhes), DM Sans (corpo)
+- Cor de destaque: rosê #e8698a com dourado #d4a843
+- Partículas/estrelas animadas no fundo
+- Scroll reveal nas seções
+
+SEÇÕES OBRIGATÓRIAS:
+1. Tela de abertura (cover) com botão "Ver Presente" — nome dos dois, data do namoro
+2. Contador ao vivo: anos, meses, dias e total de dias juntos (desde a data do namoro)
+3. Cards de stats: datas marcantes (se conheceram, primeiro beijo, pedido, moraram juntos)
+4. Player de música: vinil animado, barra de progresso clicável, notas flutuando — áudio em base64 embutido
+5. Linha do tempo com polaroids ilustrativos (emojis) e texto de cada momento
+6. Mapa estelar: céu estrelado com constelação na data do pedido de namoro
+7. Galeria interativa: slots clicáveis para adicionar fotos reais (FileReader base64)
+8. Carta final: mensagem de amor com assinatura
+
+DADOS DO CLIENTE:
+- Quem presenteia: {NOME1}
+- Quem recebe: {NOME2}
+- Apelidos: {APELIDOS}
+- Se conheceram: {DT_CONHECERAM} em {LOCAL_CONHECERAM}
+- Primeiro beijo: {DT_BEIJO}
+- Início do namoro: {DT_NAMORO}
+- Local do pedido: {LOCAL_PEDIDO}
+- Outras datas: {OUTRAS_DATAS}
+- Cidade: {CIDADE}
+- Música: {MUSICA} — {MUSICA_HISTORIA}
+- Momentos marcantes: {MOMENTOS}
+- O que mais ama: {QUALIDADES}
+- Frase interna: {FRASE_INTERNA}
+- Tom da mensagem: {TOM}
+- Mensagem: {MENSAGEM_AMOR}
+- Assinatura: {ASSINATURA}
+- Extras solicitados: {EXTRAS}
+
+Tudo em arquivo HTML único. Sem dependências externas além do Google Fonts.
+Ilustrações via emojis e gradientes — sem fotos de pessoas reais.`,
+    ficha: buildFichaGeral('Presente de Namorados','💕','casal')
+  },
+  {
+    id:'aniversario_namoro', cat:'casal', icon:'🥂', accent:'#d4a843',
+    nome:'Aniversário de Namoro',
+    prompt:`Crie um site presente HTML completo para celebrar um aniversário de namoro.
+
+ESTILO VISUAL:
+- Tema dark elegante com dourado e champagne (fundo #0a0806, acento #d4a843)
+- Fontes: Cormorant Garamond + Dancing Script
+- Champagne bubbles animadas no fundo
+- Efeito de brilho/glitter nos títulos
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover com contagem regressiva ou revelação do tempo juntos
+2. "Quantos dias de amor" — contador detalhado (anos, meses, dias, horas)
+3. Linha do tempo do relacionamento: do início até hoje
+4. "O que construímos juntos" — cards com conquistas e momentos
+5. Player da música do casal
+6. Mapa estelar da data do namoro
+7. Carta de aniversário de namoro
+8. Galeria de fotos
+
+DADOS DO CLIENTE:
+- Casal: {NOME1} & {NOME2}
+- Data do namoro: {DT_NAMORO}
+- Anos completando: {ANOS_COMPLETANDO}
+- Cidade: {CIDADE}
+- Momentos especiais: {MOMENTOS}
+- Conquistas juntos: {CONQUISTAS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('Aniversário de Namoro','🥂','casal')
+  },
+  {
+    id:'aniversario_casamento', cat:'casal', icon:'💍', accent:'#c0a060',
+    nome:'Aniversário de Casamento',
+    prompt:`Crie um site presente HTML luxuoso para celebrar um aniversário de casamento.
+
+ESTILO VISUAL:
+- Tema dark premium com dourado e marfim (fundo #080806, acento #c8a040)
+- Fontes: Cormorant Garamond + Cinzel + Dancing Script
+- Pétalas de rosa ou folhas douradas animadas no fundo
+- Selo/medalha animada com os anos de casamento
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover solene com os anos completados em destaque (ex: "25 Anos")
+2. "Uma vida construída juntos" — linha do tempo desde o casamento
+3. Stats do casamento: dias juntos, número especial de anos, filhos/conquistas
+4. Memórias em polaroids: viagens, festas, conquistas familiares
+5. Player da música da cerimônia ou favorita do casal
+6. Mapa estelar do dia do casamento
+7. Carta de aniversário de casamento
+8. Galeria de fotos da trajetória
+
+DADOS DO CLIENTE:
+- Casal: {NOME1} & {NOME2}
+- Data do casamento: {DT_CASAMENTO}
+- Local do casamento: {LOCAL_CASAMENTO}
+- Anos completando: {ANOS_COMPLETANDO} ({TIPO_BODA})
+- Filhos/família: {FAMILIA}
+- Momentos marcantes: {MOMENTOS}
+- Conquistas: {CONQUISTAS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('Aniversário de Casamento','💍','casal')
+  },
+  {
+    id:'boda_1', cat:'bodas', icon:'🌸', accent:'#e8a0b8',
+    nome:'1 Ano de Casamento — Bodas de Papel',
+    prompt:`Crie um site presente HTML delicado para celebrar 1 ano de casamento (Bodas de Papel).
+
+ESTILO VISUAL:
+- Tema soft e poético — fundo creme/off-white com detalhes em rosa blush
+- Efeito de papel rasgado, dobras e textura de papel
+- Fontes: Cormorant Garamond + Dancing Script
+- Animação de confetes em forma de corações de papel
+- Paleta: #faf7f2, #e8d5c0, #c8788a, #8a6040
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "1 Ano Juntos" com textura de papel artesanal
+2. "365 dias de amor" — stats do primeiro ano
+3. Linha do tempo do primeiro ano de casamento
+4. "O que o papel guarda" — cartas e memórias em formato de bilhete dobrado
+5. Player da música da cerimônia
+6. Mapa estelar do casamento
+7. Carta do primeiro aniversário
+8. Galeria
+
+DADOS: {NOME1}, {NOME2}, {DT_CASAMENTO}, {LOCAL_CASAMENTO}, {MOMENTOS_ANO1}, {MUSICA}, {MENSAGEM}, {ASSINATURA}, {EXTRAS}
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('1 Ano — Bodas de Papel','🌸','bodas')
+  },
+  {
+    id:'boda_5', cat:'bodas', icon:'🌳', accent:'#5ab88a',
+    nome:'5 Anos — Bodas de Madeira',
+    prompt:`Crie um site presente HTML para celebrar 5 anos de casamento (Bodas de Madeira).
+
+ESTILO VISUAL:
+- Tema orgânico/natural: tons de madeira, verde floresta, terra
+- Textura de madeira, veios e folhas animadas
+- Fontes: Cormorant Garamond + Playfair Display
+- Paleta: #0d1208, #1a2a0a, #4a7a3a, #c8a060, #f0e8d8
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "5 Anos — Raízes que nos unem"
+2. "Uma árvore que cresceu juntos" — metáfora da raiz ao tronco
+3. Linha do tempo dos 5 anos
+4. "O que plantamos" — conquistas, filhos, projetos, viagens
+5. Player da música
+6. Mapa estelar
+7. Carta dos 5 anos
+8. Galeria
+
+DADOS: {NOME1}, {NOME2}, {DT_CASAMENTO}, {CONQUISTAS_5ANOS}, {FAMILIA}, {MUSICA}, {MENSAGEM}, {ASSINATURA}, {EXTRAS}
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('5 Anos — Bodas de Madeira','🌳','bodas')
+  },
+  {
+    id:'boda_10', cat:'bodas', icon:'🥄', accent:'#c0c0d0',
+    nome:'10 Anos — Bodas de Estanho',
+    prompt:`Crie um site presente HTML para celebrar 10 anos de casamento (Bodas de Estanho/Alumínio).
+
+ESTILO VISUAL:
+- Tema metalizado elegante: prata, aço escovado, reflexos de luz
+- Efeito espelho/reflexo nas transições
+- Fontes: Cormorant Garamond + Cinzel
+- Paleta: #0a0a0f, #1a1a2a, #8a8aa8, #c8c8e0, #d4a843
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "10 Anos — Uma Década de Amor"
+2. "10 anos em números" — stats impactantes
+3. Linha do tempo da década
+4. "10 razões para te amar" — cards especiais
+5. Player da música
+6. Mapa estelar
+7. Carta da primeira década
+8. Galeria
+
+DADOS: {NOME1}, {NOME2}, {DT_CASAMENTO}, {DECADA_CONQUISTAS}, {10_RAZOES}, {MUSICA}, {MENSAGEM}, {ASSINATURA}, {EXTRAS}
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('10 Anos — Bodas de Estanho','🥄','bodas')
+  },
+  {
+    id:'boda_20', cat:'bodas', icon:'🪨', accent:'#a8a060',
+    nome:'20 Anos — Bodas de Porcelana',
+    prompt:`Crie um site presente HTML para celebrar 20 anos de casamento (Bodas de Porcelana).
+
+ESTILO VISUAL:
+- Tema refinado e atemporal: porcelana branca, azul cobalto, dourado
+- Motivos florais delicados em SVG
+- Fontes: Cormorant Garamond + Cinzel Decorative
+- Paleta: #f8f6f2, #1a2a4a, #4a6a9a, #c8a040, #2a1a08
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "20 Anos — Uma obra que nunca quebra"
+2. "Duas décadas de história"
+3. Linha do tempo de 20 anos com marcos familiares
+4. "O que construímos" — família, lar, conquistas
+5. Player da música
+6. Mapa estelar
+7. Carta dos 20 anos
+8. Galeria de família
+
+DADOS: {NOME1}, {NOME2}, {DT_CASAMENTO}, {FAMILIA}, {CONQUISTAS_20ANOS}, {MUSICA}, {MENSAGEM}, {ASSINATURA}, {EXTRAS}
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('20 Anos — Bodas de Porcelana','🪨','bodas')
+  },
+  {
+    id:'boda_50', cat:'bodas', icon:'🏆', accent:'#f0c030',
+    nome:'50 Anos — Bodas de Ouro',
+    prompt:`Crie um site presente HTML majestoso para celebrar 50 anos de casamento (Bodas de Ouro).
+
+ESTILO VISUAL:
+- Tema áureo e grandioso: ouro, champagne, creme envelhecido
+- Efeito de livro antigo/pergaminho dourado
+- Partículas douradas animadas — chuva de ouro
+- Fontes: Cinzel Decorative + Cormorant Garamond
+- Paleta: #080604, #1a1408, #4a3808, #c8a020, #f0d060, #faf0d0
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover majestoso: "50 Anos de Amor — Bodas de Ouro" com coroa/medalha animada
+2. "Meio século juntos" — stats impactantes (18.250+ dias, 600+ meses)
+3. Linha do tempo épica de 50 anos com décadas
+4. "Uma vida inteira" — filhos, netos, conquistas, viagens
+5. "50 razões pra te amar" ou "50 memórias de ouro"
+6. Player da música especial
+7. Mapa estelar do casamento
+8. Carta dos 50 anos — emocionante e solene
+9. Galeria de família ao longo das décadas
+10. Mensagens dos filhos/netos (campo especial)
+
+DADOS: {NOME1}, {NOME2}, {DT_CASAMENTO}, {LOCAL_CASAMENTO}, {FILHOS}, {NETOS}, {CONQUISTAS_50ANOS}, {MEMORIAS_DECADAS}, {MUSICA}, {MENSAGEM_FILHOS}, {MENSAGEM_PRINCIPAL}, {ASSINATURA}, {EXTRAS}
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaGeral('50 Anos — Bodas de Ouro','🏆','bodas')
+  },
+  {
+    id:'aniversario_geral', cat:'aniversario', icon:'🎂', accent:'#9060c8',
+    nome:'Presente de Aniversário',
+    prompt:`Crie um site presente HTML festivo e emocionante para um presente de aniversário.
+
+ESTILO VISUAL:
+- Tema dark festivo: confetes coloridos, balões, brilhos
+- Animação de confetes caindo ao abrir
+- Fontes: Playfair Display + Dancing Script + Outfit
+- Paleta: #080810, #13131f, cor de destaque personalizável conforme solicitado
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover surpresa: "Feliz Aniversário, {NOME}!" com confetes animados
+2. "Hoje é o seu dia" — contador da idade e do momento
+3. "Sobre você" — cards com qualidades e memórias
+4. Linha do tempo da vida/amizade com quem presenteia
+5. Player da música favorita
+6. "Minhas memórias favoritas com você" — polaroids
+7. Carta de aniversário
+8. Galeria de fotos
+
+DADOS DO CLIENTE:
+- Quem presenteia: {NOME_PRESENTEADOR}
+- Aniversariante: {NOME_ANIVERSARIANTE}
+- Idade que completa: {IDADE}
+- Data de nascimento: {DT_NASCIMENTO}
+- Relação (amigo, namorado, irmão…): {RELACAO}
+- Qualidades: {QUALIDADES}
+- Memórias juntos: {MEMORIAS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Tema de cores preferido: {CORES}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaAniversario()
+  },
+  {
+    id:'quinze_anos', cat:'aniversario', icon:'👑', accent:'#c060a8',
+    nome:'Aniversário de 15 Anos',
+    prompt:`Crie um site presente HTML mágico e especial para um aniversário de 15 anos.
+
+ESTILO VISUAL:
+- Tema de conto de fadas / festa real: rosa, dourado, lilás, estrelas
+- Coroa animada, pétalas caindo, partículas de glitter
+- Fontes: Cinzel Decorative + Dancing Script + Outfit
+- Paleta: #0d0814, #1a0f20, #8a30a0, #d060c0, #f0a8d8, #f0d060
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "15 Anos — Seu dia de Princesa" com coroa animada e confetes
+2. "15 anos de alegria" — linha do tempo desde o nascimento
+3. "Quem você é" — qualidades, sonhos, conquistas
+4. "15 memórias especiais" — polaroids dos momentos marcantes
+5. "Seus maiores fãs" — mensagens da família
+6. Player da música favorita dela
+7. "Seus sonhos para o futuro" — seção especial
+8. Carta de 15 anos
+9. Galeria
+
+DADOS DO CLIENTE:
+- Aniversariante: {NOME}
+- Data de nascimento: {DT_NASCIMENTO}
+- Quem fez o site: {QUEM_FEZ} ({RELACAO})
+- Qualidades: {QUALIDADES}
+- Sonhos/planos: {SONHOS}
+- Memórias marcantes: {MEMORIAS}
+- Músicas favoritas: {MUSICAS}
+- Mensagens da família: {MENSAGENS_FAMILIA}
+- Carta principal: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Tema de cores: {CORES}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaAniversario15()
+  },
+  {
+    id:'aniversario_pai', cat:'familia', icon:'👨', accent:'#6080d4',
+    nome:'Aniversário de Pai',
+    prompt:`Crie um site presente HTML emocionante e masculino para um presente de aniversário de pai.
+
+ESTILO VISUAL:
+- Tema dark elegante e masulino: azul marinho, dourado, grafite
+- Sobrio e emocionante — sem excessos
+- Fontes: Cormorant Garamond + Outfit
+- Paleta: #060810, #0e1420, #1a2840, #4060a8, #d4a843, #f0eef8
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "Feliz Aniversário, Pai" — sóbrio e poderoso
+2. "Tudo que você representa" — qualidades do pai em cards
+3. Linha do tempo: momentos marcantes vividos juntos
+4. "O que aprendi com você" — lições e ensinamentos
+5. "Memórias que guardo" — polaroids em estilo vintage
+6. Player da música favorita do pai ou que representa ele
+7. Carta de filho(a) para o pai
+8. Galeria
+
+DADOS DO CLIENTE:
+- Nome do pai: {NOME_PAI}
+- Quem presenteia: {NOME_FILHO} ({RELACAO_FILHO})
+- Idade que completa: {IDADE}
+- Qualidades do pai: {QUALIDADES}
+- Ensinamentos: {ENSINAMENTOS}
+- Memórias juntos: {MEMORIAS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaFamilia('pai','👨')
+  },
+  {
+    id:'aniversario_mae', cat:'familia', icon:'👩', accent:'#d4607a',
+    nome:'Aniversário de Mãe',
+    prompt:`Crie um site presente HTML amoroso e emocionante para um presente de aniversário de mãe.
+
+ESTILO VISUAL:
+- Tema floral e acolhedor: rosê, lilás, lavanda, creme
+- Flores animadas em SVG, pétalas caindo suavemente
+- Fontes: Cormorant Garamond + Dancing Script
+- Paleta: #100810, #200a18, #6a2050, #c8608a, #f0a8c8, #f8f0f4
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "Feliz Aniversário, Mãe" com flores animadas
+2. "Você é meu lar" — qualidades e o que representa
+3. Linha do tempo: momentos marcantes mãe e filho(a)
+4. "Tudo que você me ensinou" — lições de vida
+5. "Memórias do nosso amor" — polaroids
+6. Player da música favorita da mãe
+7. Carta emocionante de filho(a) para a mãe
+8. Galeria
+
+DADOS DO CLIENTE:
+- Nome da mãe: {NOME_MAE}
+- Quem presenteia: {NOME_FILHO} ({RELACAO_FILHO})
+- Idade que completa: {IDADE}
+- Qualidades da mãe: {QUALIDADES}
+- Ensinamentos: {ENSINAMENTOS}
+- Memórias juntos: {MEMORIAS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaFamilia('mãe','👩')
+  },
+  {
+    id:'aniversario_avo', cat:'familia', icon:'👵', accent:'#e8a060',
+    nome:'Aniversário de Avó',
+    prompt:`Crie um site presente HTML carinhoso e nostálgico para um presente de aniversário de avó.
+
+ESTILO VISUAL:
+- Tema retrô/vintage acolhedor: creme, terracota, laranja suave, marrom caramelo
+- Efeito de álbum antigo, bordas de foto vintage
+- Fontes: Cormorant Garamond + Dancing Script
+- Paleta: #0d0a06, #1a1408, #3a2808, #c87830, #f0c060, #faf0e0
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "Feliz Aniversário, Vovó" acolhedor e nostálgico
+2. "A mulher que nos formou" — quem ela é para a família
+3. "Histórias que você nos contou" — memórias e causos
+4. "Momentos na sua casa" — polaroids em estilo vintage
+5. "Tudo que aprendi na sua cozinha / no seu colo"
+6. Player da música favorita da avó
+7. Carta da família / neto(a) para a avó
+8. Galeria de família
+
+DADOS DO CLIENTE:
+- Nome da avó: {NOME_AVO}
+- Quem presenteia: {QUEM_PRESENTEIA} ({RELACAO})
+- Idade que completa: {IDADE}
+- Qualidades: {QUALIDADES}
+- Memórias na casa dela: {MEMORIAS}
+- Histórias marcantes: {HISTORIAS}
+- Músicas que ela gosta: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaFamilia('avó','👵')
+  },
+  {
+    id:'aniversario_avo_m', cat:'familia', icon:'👴', accent:'#60a880',
+    nome:'Aniversário de Avô',
+    prompt:`Crie um site presente HTML respeitoso e afetuoso para um presente de aniversário de avô.
+
+ESTILO VISUAL:
+- Tema clássico e masculino: verde musgo, marrom couro, dourado envelhecido
+- Estética de biblioteca antiga, couro e madeira
+- Fontes: Cormorant Garamond + Cinzel + Outfit
+- Paleta: #060a08, #0e1810, #1a3020, #3a6040, #c8a040, #f0e8d0
+
+SEÇÕES OBRIGATÓRIAS:
+1. Cover: "Feliz Aniversário, Vovô" — sóbrio e afetuoso
+2. "O homem que nos inspira" — legado e caráter
+3. "Histórias do senhor" — causos, ensinamentos, aventuras
+4. "Momentos que guardarei para sempre" — polaroids vintage
+5. "O que aprendi com você" — lições de vida
+6. Player da música favorita do avô
+7. Carta da família / neto(a) para o avô
+8. Galeria
+
+DADOS DO CLIENTE:
+- Nome do avô: {NOME_AVO}
+- Quem presenteia: {QUEM_PRESENTEIA} ({RELACAO})
+- Idade que completa: {IDADE}
+- Qualidades/legado: {QUALIDADES}
+- Histórias marcantes: {HISTORIAS}
+- Ensinamentos: {ENSINAMENTOS}
+- Música: {MUSICA}
+- Mensagem: {MENSAGEM}
+- Assinatura: {ASSINATURA}
+- Extras: {EXTRAS}
+
+HTML único, sem dependências externas além do Google Fonts.`,
+    ficha: buildFichaFamilia('avô','👴')
+  },
+];
+
+// ===== FICHA BUILDERS =====
+function buildFichaGeral(nome, icon, cat){
+  return `<div class="ficha-section">
+    <div class="ficha-sec-title">👫 O Casal</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">Quem presenteia <span class="req">*</span></label><input class="ficha-input" placeholder="Nome" data-key="NOME1"></div>
+      <div class="ficha-field"><label class="ficha-label">Quem recebe <span class="req">*</span></label><input class="ficha-input" placeholder="Nome" data-key="NOME2"></div>
+    </div>
+    <div class="ficha-field"><label class="ficha-label">Apelidos carinhosos</label><input class="ficha-input" placeholder="Ex: Bebê, Amor, Princesa…" data-key="APELIDOS"></div>
+    <div class="ficha-field"><label class="ficha-label">Tipo</label><div class="opt-pills">
+      <label class="opt-pill"><input type="radio" name="tipo_rel_${cat}" value="Namorados"><span>💕 Namorados</span></label>
+      <label class="opt-pill"><input type="radio" name="tipo_rel_${cat}" value="Noivos"><span>💍 Noivos</span></label>
+      <label class="opt-pill"><input type="radio" name="tipo_rel_${cat}" value="Casados"><span>🥂 Casados</span></label>
+    </div></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📅 Datas</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">Se conheceram</label><input type="date" class="ficha-input" data-key="DT_CONHECERAM"></div>
+      <div class="ficha-field"><label class="ficha-label">Primeiro beijo</label><input type="date" class="ficha-input" data-key="DT_BEIJO"></div>
+    </div>
+    <div class="ficha-field"><label class="ficha-label">Data do namoro/casamento <span class="req">*</span></label><input type="date" class="ficha-input" data-key="DT_NAMORO"></div>
+    <div class="ficha-field"><label class="ficha-label">Onde se conheceram</label><input class="ficha-input" placeholder="Ex: Academia de karatê, faculdade…" data-key="LOCAL_CONHECERAM"></div>
+    <div class="ficha-field"><label class="ficha-label">Local do pedido</label><input class="ficha-input" placeholder="Ex: Na frente da academia, restaurante…" data-key="LOCAL_PEDIDO"></div>
+    <div class="ficha-field"><label class="ficha-label">Outras datas marcantes</label><textarea class="ficha-textarea" rows="3" placeholder="Ex: 2018 — foram morar juntos…" data-key="OUTRAS_DATAS"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Cidade onde se conheceram <span class="req">*</span></label><input class="ficha-input" placeholder="Ex: Cavaleiro, Jaboatão — PE" data-key="CIDADE"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📖 A História</div>
+    <div class="ficha-tip">💡 Escreva de forma informal — quanto mais detalhes, mais especial fica!</div>
+    <div class="ficha-field"><label class="ficha-label">Como se conheceram <span class="req">*</span></label><textarea class="ficha-textarea" rows="3" placeholder="Como foi o primeiro encontro?" data-key="HISTORIA_ENCONTRO"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Momentos inesquecíveis</label><textarea class="ficha-textarea" rows="4" placeholder="Viagens, conquistas, momentos especiais…" data-key="MOMENTOS"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">O que mais ama nessa pessoa</label><textarea class="ficha-textarea" rows="3" placeholder="Jeitos, hábitos, qualidades…" data-key="QUALIDADES"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Frase ou piada interna</label><input class="ficha-input" placeholder="Algo que só vocês dois entendem…" data-key="FRASE_INTERNA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🎵 Música</div>
+    <div class="ficha-field"><label class="ficha-label">Música do casal <span class="req">*</span></label><input class="ficha-input" placeholder="Ex: Anjo — Saulo" data-key="MUSICA"></div>
+    <div class="ficha-field"><label class="ficha-label">Por que é especial</label><input class="ficha-input" placeholder="História por trás da música…" data-key="MUSICA_HISTORIA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">⭐ Extras</div>
+    <div class="ficha-extras">
+      ${buildExtras()}
+    </div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💌 Mensagem Final</div>
+    <div class="ficha-tip">💡 Escreva do coração — vou deixar ela linda no site!</div>
+    <div class="ficha-field"><label class="ficha-label">Mensagem de amor <span class="req">*</span></label><textarea class="ficha-textarea" rows="6" placeholder="Tudo que quer dizer…" data-key="MENSAGEM_AMOR"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Tom</label><div class="opt-pills">
+      <label class="opt-pill"><input type="radio" name="tom_${cat}" value="Romântico"><span>🌹 Romântico</span></label>
+      <label class="opt-pill"><input type="radio" name="tom_${cat}" value="Poético"><span>🌙 Poético</span></label>
+      <label class="opt-pill"><input type="radio" name="tom_${cat}" value="Divertido"><span>😄 Divertido</span></label>
+      <label class="opt-pill"><input type="radio" name="tom_${cat}" value="Simples"><span>🤍 Simples</span></label>
+    </div></div>
+    <div class="ficha-field"><label class="ficha-label">Assinatura</label><input class="ficha-input" placeholder="Ex: Com todo meu amor, Eduardo 🤍" data-key="ASSINATURA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📦 Entrega</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">WhatsApp <span class="req">*</span></label><input class="ficha-input" placeholder="(81) 9 9999-9999" data-key="WHATSAPP"></div>
+      <div class="ficha-field"><label class="ficha-label">Precisa até <span class="req">*</span></label><input type="date" class="ficha-input" data-key="DT_ENTREGA"></div>
+    </div>
+    <div class="ficha-field"><label class="ficha-label">Observações</label><textarea class="ficha-textarea" rows="2" placeholder="Algo especial ou extra?" data-key="OBS"></textarea></div>
+  </div>`;
+}
+
+function buildFichaAniversario(){
+  return `<div class="ficha-section">
+    <div class="ficha-sec-title">🎂 O Aniversário</div>
+    <div class="ficha-field"><label class="ficha-label">Aniversariante <span class="req">*</span></label><input class="ficha-input" placeholder="Nome completo" data-key="NOME_ANIVERSARIANTE"></div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">Data de nascimento</label><input type="date" class="ficha-input" data-key="DT_NASCIMENTO"></div>
+      <div class="ficha-field"><label class="ficha-label">Idade que completa</label><input class="ficha-input" placeholder="Ex: 30" data-key="IDADE"></div>
+    </div>
+    <div class="ficha-field"><label class="ficha-label">Quem presenteia <span class="req">*</span></label><input class="ficha-input" placeholder="Nome" data-key="NOME_PRESENTEADOR"></div>
+    <div class="ficha-field"><label class="ficha-label">Relação</label><input class="ficha-input" placeholder="Ex: namorado(a), melhor amigo(a), irmão(ã)…" data-key="RELACAO"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💛 Sobre a Pessoa</div>
+    <div class="ficha-field"><label class="ficha-label">Qualidades e o que você mais admira</label><textarea class="ficha-textarea" rows="3" placeholder="Jeitos, conquistas, personalidade…" data-key="QUALIDADES"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Memórias favoritas juntos</label><textarea class="ficha-textarea" rows="4" placeholder="Momentos marcantes da amizade/relação…" data-key="MEMORIAS"></textarea></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🎵 Música</div>
+    <div class="ficha-field"><label class="ficha-label">Música favorita ou que representa</label><input class="ficha-input" placeholder="Ex: Título — Artista" data-key="MUSICA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🎨 Visual</div>
+    <div class="ficha-field"><label class="ficha-label">Tema de cores preferido</label><input class="ficha-input" placeholder="Ex: azul e dourado, rosa e roxo…" data-key="CORES"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">⭐ Extras</div>
+    <div class="ficha-extras">${buildExtras()}</div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💌 Mensagem</div>
+    <div class="ficha-tip">💡 Escreva do coração — quanto mais pessoal, mais especial!</div>
+    <div class="ficha-field"><label class="ficha-label">Mensagem <span class="req">*</span></label><textarea class="ficha-textarea" rows="5" placeholder="O que você quer dizer para essa pessoa especial…" data-key="MENSAGEM"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Assinatura</label><input class="ficha-input" placeholder="Ex: Com carinho, Maria 🎂" data-key="ASSINATURA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📦 Entrega</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">WhatsApp <span class="req">*</span></label><input class="ficha-input" placeholder="(81) 9 9999-9999" data-key="WHATSAPP"></div>
+      <div class="ficha-field"><label class="ficha-label">Precisa até</label><input type="date" class="ficha-input" data-key="DT_ENTREGA"></div>
+    </div>
+  </div>`;
+}
+
+function buildFichaAniversario15(){
+  return `<div class="ficha-section">
+    <div class="ficha-sec-title">👑 A Aniversariante</div>
+    <div class="ficha-field"><label class="ficha-label">Nome da debutante <span class="req">*</span></label><input class="ficha-input" placeholder="Nome completo" data-key="NOME"></div>
+    <div class="ficha-field"><label class="ficha-label">Data de nascimento <span class="req">*</span></label><input type="date" class="ficha-input" data-key="DT_NASCIMENTO"></div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">Quem fez o site</label><input class="ficha-input" placeholder="Nome" data-key="QUEM_FEZ"></div>
+      <div class="ficha-field"><label class="ficha-label">Relação</label><input class="ficha-input" placeholder="Ex: mãe, pai, namorado…" data-key="RELACAO"></div>
+    </div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🌸 Sobre ela</div>
+    <div class="ficha-field"><label class="ficha-label">Qualidades e personalidade</label><textarea class="ficha-textarea" rows="3" placeholder="Como ela é, o que admira nela…" data-key="QUALIDADES"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Sonhos e planos</label><textarea class="ficha-textarea" rows="2" placeholder="O que ela quer pra vida, profissão, viagens…" data-key="SONHOS"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">15 memórias marcantes</label><textarea class="ficha-textarea" rows="5" placeholder="Liste momentos especiais da vida dela…" data-key="MEMORIAS"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Mensagens da família (opcional)</label><textarea class="ficha-textarea" rows="3" placeholder="Ex: Pai: '...' / Mãe: '...'" data-key="MENSAGENS_FAMILIA"></textarea></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🎵 Música</div>
+    <div class="ficha-field"><label class="ficha-label">Música favorita dela</label><input class="ficha-input" placeholder="Ex: Título — Artista" data-key="MUSICAS"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">⭐ Extras</div>
+    <div class="ficha-extras">${buildExtras()}</div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💌 Carta Principal</div>
+    <div class="ficha-tip">💡 A carta que vai aparecer no final do site — escreva do coração!</div>
+    <div class="ficha-field"><label class="ficha-label">Mensagem <span class="req">*</span></label><textarea class="ficha-textarea" rows="5" data-key="MENSAGEM"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Assinatura</label><input class="ficha-input" placeholder="Ex: Com todo nosso amor, Mamãe e Papai 👑" data-key="ASSINATURA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📦 Entrega</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">WhatsApp <span class="req">*</span></label><input class="ficha-input" placeholder="(81) 9 9999-9999" data-key="WHATSAPP"></div>
+      <div class="ficha-field"><label class="ficha-label">Precisa até</label><input type="date" class="ficha-input" data-key="DT_ENTREGA"></div>
+    </div>
+  </div>`;
+}
+
+function buildFichaFamilia(membro, icone){
+  const cap = membro.charAt(0).toUpperCase()+membro.slice(1);
+  return `<div class="ficha-section">
+    <div class="ficha-sec-title">${icone} O(A) ${cap}</div>
+    <div class="ficha-field"><label class="ficha-label">Nome ${membro.includes('av') ? 'do(a) '+cap : 'do(a) '+cap} <span class="req">*</span></label><input class="ficha-input" placeholder="Nome" data-key="NOME_${membro.toUpperCase().replace('ã','A').replace('ô','O')}"></div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">Idade que completa</label><input class="ficha-input" placeholder="Ex: 65" data-key="IDADE"></div>
+      <div class="ficha-field"><label class="ficha-label">Quem presenteia</label><input class="ficha-input" placeholder="Nome e relação" data-key="QUEM_PRESENTEIA"></div>
+    </div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💛 Sobre ${membro.includes('av') ? 'ele(a)' : 'ele(a)'}</div>
+    <div class="ficha-field"><label class="ficha-label">Qualidades e o que representa</label><textarea class="ficha-textarea" rows="3" placeholder="Como é, o que admira, o que representa pra família…" data-key="QUALIDADES"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Memórias especiais juntos</label><textarea class="ficha-textarea" rows="4" placeholder="Momentos marcantes, histórias, tradições…" data-key="MEMORIAS"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">${membro.includes('av') ? 'Histórias e causos' : 'O que aprendeu com ele(a)'}</label><textarea class="ficha-textarea" rows="3" placeholder="${membro.includes('av') ? 'Histórias que você lembra com carinho…' : 'Ensinamentos, conselhos, lições de vida…'}" data-key="${membro.includes('av') ? 'HISTORIAS' : 'ENSINAMENTOS'}"></textarea></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">🎵 Música</div>
+    <div class="ficha-field"><label class="ficha-label">Música favorita ou que representa</label><input class="ficha-input" placeholder="Ex: Título — Artista" data-key="MUSICA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">⭐ Extras</div>
+    <div class="ficha-extras">${buildExtras()}</div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">💌 Mensagem</div>
+    <div class="ficha-tip">💡 Escreva do coração — pode ser emocionante, pode ser engraçado, pode ser os dois!</div>
+    <div class="ficha-field"><label class="ficha-label">Mensagem <span class="req">*</span></label><textarea class="ficha-textarea" rows="5" data-key="MENSAGEM"></textarea></div>
+    <div class="ficha-field"><label class="ficha-label">Assinatura</label><input class="ficha-input" placeholder="Ex: Com muito amor, seus filhos 🤍" data-key="ASSINATURA"></div>
+  </div>
+  <div class="ficha-section">
+    <div class="ficha-sec-title">📦 Entrega</div>
+    <div class="ficha-row">
+      <div class="ficha-field"><label class="ficha-label">WhatsApp <span class="req">*</span></label><input class="ficha-input" placeholder="(81) 9 9999-9999" data-key="WHATSAPP"></div>
+      <div class="ficha-field"><label class="ficha-label">Precisa até</label><input type="date" class="ficha-input" data-key="DT_ENTREGA"></div>
+    </div>
+  </div>`;
+}
+
+function buildExtras(){
+  const itens = [
+    ['💫','Contador ao vivo','Dias, meses e anos juntos em tempo real'],
+    ['🌌','Mapa estelar','Céu na data especial'],
+    ['🎵','Player de música','Vinil animado + player funcional'],
+    ['🗺️','Mapa interativo','Local especial no Google Maps'],
+    ['🎴','Quiz do casal/pessoa','Perguntinhas personalizadas'],
+    ['🔒','Senha de acesso','Site protegido por senha'],
+    ['🧧','Animação de surpresa','Confetes e corações ao abrir'],
+    ['🎬','Vídeo embutido','Vídeo especial incorporado'],
+  ];
+  return itens.map(([ico,nome,desc],i)=>`
+    <label class="ficha-extra">
+      <input type="checkbox" class="extra-inp" ${i<3?'checked':''}>
+      <div class="fe-box">${i<3?'✓':''}</div>
+      <div class="fe-icon">${ico}</div>
+      <div class="fe-info"><div class="fe-name">${nome}</div><div class="fe-desc">${desc}</div></div>
+    </label>`).join('');
+}
+
+// ===== RENDER CARDS =====
+let currentFilter = 'todos';
+function renderCards(list){
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = '';
+  document.getElementById('grid-label').textContent = `${list.length} presente${list.length!==1?'s':''} encontrado${list.length!==1?'s':''}`;
+  list.forEach((p,i)=>{
+    const card = document.createElement('div');
+    card.className='pcard';
+    card.dataset.id=p.id;
+    card.style.cssText=`--accent:${p.accent}; transition-delay:${i*40}ms`;
+    card.innerHTML=`
+      <div class="pcard-inner">
+        <div class="pcard-accent"></div>
+        <div class="pcard-body">
+          <div class="pcard-icon">${p.icon}</div>
+          <div class="pcard-info">
+            <div class="pcard-name">${p.nome}</div>
+            <div class="pcard-cat">${catLabel(p.cat)}</div>
+          </div>
+          <div class="pcard-actions">
+            <button class="btn-action btn-prompt" onclick="openPrompt('${p.id}')">📋 Prompt</button>
+            <button class="btn-action btn-ficha" onclick="openFicha('${p.id}')">📝 Ficha</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>card.classList.add('visible')));
+  });
+}
+
+function catLabel(c){ return {casal:'💕 Casal',aniversario:'🎂 Aniversário',familia:'👨‍👩‍👧 Família',bodas:'💍 Bodas'}[c]||c; }
+
+function setFilter(cat, btn){
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards();
+}
+
+function filterCards(){
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const list = PRESENTES.filter(p=>{
+    const matchCat = currentFilter==='todos' || p.cat===currentFilter;
+    const matchQ = !q || p.nome.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  renderCards(list);
+}
+
+// ===== MODAL PROMPT =====
+function openPrompt(id){
+  const p = PRESENTES.find(x=>x.id===id);
+  document.getElementById('mp-icon').textContent = p.icon;
+  document.getElementById('mp-title').textContent = p.nome;
+  document.getElementById('mp-content').textContent = p.prompt;
+  document.getElementById('modal-prompt').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function copyPrompt(){
+  navigator.clipboard.writeText(document.getElementById('mp-content').textContent)
+    .then(()=>showToast('✅ Prompt copiado!'));
+}
+
+// ===== MODAL FICHA =====
+function openFicha(id){
+  const p = PRESENTES.find(x=>x.id===id);
+  document.getElementById('mf-icon').textContent = p.icon;
+  document.getElementById('mf-title').textContent = p.nome;
+  const body = document.getElementById('mf-body');
+  body.innerHTML = p.ficha + `
+    <button class="btn-gerar" onclick="gerarResumoDaFicha(this)">✨ Gerar Resumo do Pedido</button>
+    <div class="resumo-box" id="resumo-box-${id}"></div>
+    <button class="btn-copy-resumo" id="btn-copy-res-${id}" onclick="copyResumo('${id}')">📋 Copiar Resumo</button>`;
+  // sync checkbox visuals
+  body.querySelectorAll('.ficha-extra').forEach(ex=>{
+    const inp = ex.querySelector('input');
+    const box = ex.querySelector('.fe-box');
+    const sync=()=>box.textContent=inp.checked?'✓':'';
+    sync(); inp.addEventListener('change',sync);
+  });
+  document.getElementById('modal-ficha').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function gerarResumoDaFicha(btn){
+  const modal = btn.closest('.modal');
+  const id = modal.closest('.modal-overlay').id.replace('modal-','');
+  // collect fields
+  const fields = {};
+  modal.querySelectorAll('[data-key]').forEach(el=>{
+    fields[el.dataset.key] = el.value||'—';
+  });
+  // collect radios
+  modal.querySelectorAll('input[type=radio]:checked').forEach(el=>{
+    fields[el.name] = el.value;
+  });
+  // collect extras
+  const extras = [];
+  modal.querySelectorAll('.ficha-extra').forEach(ex=>{
+    if(ex.querySelector('input').checked)
+      extras.push(ex.querySelector('.fe-name').textContent);
+  });
+  fields['EXTRAS'] = extras.join(', ') || '—';
+
+  let txt = `🎁 PEDIDO — ${document.getElementById('mf-title').textContent.toUpperCase()}\n`;
+  txt += '━'.repeat(40) + '\n\n';
+  Object.entries(fields).forEach(([k,v])=>{ if(v&&v!=='—') txt+=`• ${k.replace(/_/g,' ')}: ${v}\n`; });
+  txt += '\n' + '━'.repeat(40);
+
+  const resumoId = `mf-body`;
+  const box = modal.querySelector('.resumo-box');
+  const copyBtn = modal.querySelector('.btn-copy-resumo');
+  box.textContent = txt;
+  box.classList.add('visible');
+  copyBtn.classList.add('visible');
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyResumo(id){
+  const box = document.getElementById('mf-body').querySelector('.resumo-box');
+  if(box) navigator.clipboard.writeText(box.textContent).then(()=>showToast('✅ Resumo copiado!'));
+}
+
+function closeModal(type){
+  document.getElementById(`modal-${type}`).classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ===== TOAST =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// INIT
+renderCards(PRESENTES);
+</script>
+</body>
+</html>
